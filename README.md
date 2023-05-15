@@ -1,2 +1,3 @@
-# pza-emu-hanmatek-hm310t
-Test Emulator of the HM310T based on Raspberry Pi Pico H
+# Pza Emulator for hanmatek/hm310t power supply
+The main goal of this emulator is to provide the exact same USB interface that the **hanmatek/hm310t** power supply.
+

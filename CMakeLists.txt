@@ -43,3 +43,8 @@ pico_add_extra_outputs(firmware)
 # elseif(PICO_ON_DEVICE)
 #     message(WARNING "not building firmware because TinyUSB submodule is not initialized in the SDK")
 # endif()
+
+add_definitions(-DUSBD_VID=0x02E8A) # ID_VENDOR_ID
+add_definitions(-DUSBD_PID=0x0000A) # ID_MODEL_ID 0x5F40
+add_definitions(-DUSBD_MANUFACTURER="Hanmatek") # ID_VENDOR
+add_definitions(-DUSBD_PRODUCT="HM310T") # ID_MODEL

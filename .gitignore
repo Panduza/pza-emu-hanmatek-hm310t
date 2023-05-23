@@ -21,6 +21,8 @@
 *.a
 *.la
 *.lo
+liblightmodbus
+pico-sdk
 
 # Shared objects (inc. Windows DLLs)
 *.dll
@@ -53,4 +55,3 @@ dkms.conf
 
 # Building repository
 build
-liblightmodbus

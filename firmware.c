@@ -40,9 +40,6 @@
 // DEBUG
 #define debug(...) uart_puts(UART_ID, __VA_ARGS__);
 
-// uint8_t coils[REG_COUNT / 8];
-// uint16_t regs[REG_COUNT];
-
 
 static uint8_t registers[REG_COUNT];
 static uint8_t inputRegisters[REG_COUNT];
@@ -53,13 +50,11 @@ static uint8_t discreteInputs[REG_COUNT / 8];
 
 // prototype functions
 void init(const uint led_used);
-void decodeFrame(char reception[], int size, int sizeOfData);
-void hexToASCII (char usefulData[]);
 void printErrorInfo(ModbusErrorInfo err);
 void printAndSendFrameResponse(ModbusErrorInfo err, const ModbusSlave *slave);
 void determinFunctionCodeError (char *responseLib);
 void initHanmtekValue();
-void readGoal(int index);
+void readGoalToReal(int index);
 void blink();
 
 // callback prototypes
@@ -86,16 +81,10 @@ int main() {
     gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
 
-
     initHanmtekValue();
-    gpio_put(LED_PIN, 1);
-    sleep_ms(500);
-    gpio_put(LED_PIN, 0);
-    sleep_ms(250);
-
+    blink();
 
     debug("begining of program..\r\n");
-
 
 
     error = modbusSlaveInit(&slave, registerCallback, exceptionCallback, modbusDefaultAllocator, modbusSlaveDefaultFunctions, modbusSlaveDefaultFunctionCount);
@@ -151,17 +140,13 @@ void init(const uint led_used){
 }
 
 void initHanmtekValue(){
-    //Coils
-    //modbusMaskWrite(coils, 0x01, 1); //Power output/stop setting
-    //coils[0x01]=1;
-
     //Holdings
     registers[0x0001] = 0;   //state
     registers[0x0010] = 200; //volt real
     registers[0x0011] = 20;  //amps real
 }
 
-void readGoal(int index){
+void readGoalToReal(int index){
     switch (index)
     {
         case 0x0030: //voltage real 
@@ -225,8 +210,8 @@ char str[1024];
         case MODBUS_REGQ_W:
             switch (args->type)
             {
-                case MODBUS_HOLDING_REGISTER: registers[args->index] = args->value; readGoal(args->index); break;
-                case MODBUS_COIL:             blink(); modbusMaskWrite(coils, args->index, args->value); break;
+                case MODBUS_HOLDING_REGISTER: registers[args->index] = args->value; readGoalToReal(args->index); break;
+                case MODBUS_COIL:             modbusMaskWrite(coils, args->index, args->value); break;
                 default:                      break;
             }
             break;
@@ -259,58 +244,4 @@ void printErrorInfo(ModbusErrorInfo err)
 		debug(modbusErrorSourceStr(modbusGetErrorSource(err)));
 		debug(modbusErrorStr(modbusGetErrorCode(err)));
     }
-}
-
-/*
-* https://rapidscada.net/modbus/
-*/
-void decodeFrame(char reception[], int size, int sizeOfDataFrame){
-
-    char slaveID;
-    char functionCode;
-    char addressStart;
-    char sizeOfData;
-    char byteCount;
-    char data[sizeOfDataFrame];
-    char checksum[2];
-    int j = 0;
-    
-    slaveID = reception[0];
-    functionCode = reception[1];
-    addressStart = reception[3];
-    sizeOfData = reception[5];
-    byteCount = reception[6];
-    checksum[0]= reception[size - 2];
-    checksum[1] = reception[size - 1];
-
-    for(int i = 7; i < byteCount + 7; i++){
-        data[j] = reception[i];
-        //printf(" %02X", data[j]);
-        j++;
-    }
-
-   // hexToASCII(data);
-
-    //printf("\r\n");
-    //printf("frame format : \r\n");
-    //printf (" slave address -- function code -- starting address -- quantity -- byte count -- data -- CRC \r\n");
-    //printf ("The value of slave ID is %02X \r\n the value of function code is %02X \r\n the value of starting address is %02X \r\n the value of quantity is %02X \r\n  the value of byte count is %02X \r\n the CRC bytes are %02X and %02X \r\n", slaveID, functionCode, addressStart, sizeOfData, byteCount, checksum[0], checksum[1]);
-    sleep_ms(2000);
-}
-
-
-void hexToASCII(char usefulData[]){
-    char dataInASCII[14];
-
-    for(int i =0; i< strlen(usefulData); i+=2){
-        sscanf(&usefulData[i], "%2x", &dataInASCII[i/2]);
-    }
-
-    //printf("data in interpretable String : ");
-    for(int i = 0; i< sizeof(dataInASCII); i++){
-        //printf("%s", dataInASCII[i]);
-    }
-    //printf("\r\n");
-
-
 }

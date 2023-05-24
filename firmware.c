@@ -41,8 +41,8 @@
 #define debug(...) uart_puts(UART_ID, __VA_ARGS__);
 
 
-static uint8_t registers[REG_COUNT];
-static uint8_t inputRegisters[REG_COUNT];
+static uint16_t registers[REG_COUNT];
+static uint16_t inputRegisters[REG_COUNT];
 static uint8_t coils[REG_COUNT / 8];
 static uint8_t discreteInputs[REG_COUNT / 8];
 
@@ -147,6 +147,7 @@ void initHanmtekValue(){
 }
 
 void readGoalToReal(int index){
+    
     switch (index)
     {
         case 0x0030: //voltage real 

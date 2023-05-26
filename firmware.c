@@ -12,22 +12,17 @@
 #include "pico/stdlib.h"
 #include "tusb_config.h"
 
-
-
 // MACROS
 #define LIGHTMODBUS_SLAVE_FULL
 #define LIGHTMODBUS_DEBUG
 #define LIGHTMODBUS_IMPL
 
-
 // LIGTHMODBUS LIB
 #include "lightmodbus/lightmodbus.h"
-
 
 #ifndef REG_COUNT
 #define REG_COUNT 6250
 #endif
-
 
 // CONSTANTS
 #define UART_ID uart1
@@ -35,18 +30,13 @@
 #define UART_TX_PIN 4
 #define UART_RX_PIN 5
 
-
-
 // DEBUG
 #define debug(...) uart_puts(UART_ID, __VA_ARGS__);
-
 
 static uint16_t registers[REG_COUNT];
 static uint16_t inputRegisters[REG_COUNT];
 static uint8_t coils[REG_COUNT / 8];
 static uint8_t discreteInputs[REG_COUNT / 8];
-
-
 
 // prototype functions
 void init(const uint led_used);
@@ -62,7 +52,6 @@ ModbusError registerCallback(const ModbusSlave *slaveID,const ModbusRegisterCall
 ModbusError exceptionCallback(const ModbusSlave *slave,  uint8_t function, ModbusExceptionCode code);
 
 int main() {
-
 
     int length = 9;
     int i_get=0;
@@ -96,22 +85,12 @@ int main() {
     while(1){
 
         i_get=0;
-        debug("Reading hex data from stdin...\n\r");
         while ((single = getchar()) != EOF) {
-            debug("inside.\r\n"); 
-            debug("processing \r\n");
             receiveBuffer[i_get] = single;
             error = modbusParseRequestRTU(&slave, 0x01, receiveBuffer, i_get+1);
             if(modbusIsOk(error)){
-                debug("break\r\n");
                 break;
                 i_get=0;
-            }else{
-                debug("checking the data... \r\n");
-                char strDebug[250];
-                sprintf(strDebug, "value of i %d, value of single %.2X value of buffer %.2X value of modbus check %d \r\n", i_get, single, receiveBuffer[i_get], modbusIsOk(error));
-                debug(strDebug);
-                debug("test \r\n");
             }
             i_get++;
         }
@@ -129,7 +108,6 @@ int main() {
 
 
 void init(const uint led_used){
-    //tusb_init();
     stdio_init_all();
     uart_init(UART_ID, BAUDRATE);
     gpio_init(led_used);
@@ -141,20 +119,22 @@ void init(const uint led_used){
 
 void initHanmtekValue(){
     //Holdings
-    registers[0x0001] = 0;   //state
+    registers[0x0001] = 1;   //state
     registers[0x0010] = 200; //volt real
     registers[0x0011] = 20;  //amps real
 }
 
 void readGoalToReal(int index){
-    
     switch (index)
     {
-        case 0x0030: //voltage real 
+        case 0x0030: //voltage goal 
             registers[0x0010] = registers[index];
             break;
-        case 0x0031: //amps real
+        case 0x0031: //amps goal
             registers[0x0011] = registers[index];
+            break;
+        case 0x0001: //enable
+            registers[0x0001] = (uint16_t)registers[index];
             break;
     }
 }
@@ -177,7 +157,7 @@ void printAndSendFrameResponse(ModbusErrorInfo err , const ModbusSlave *slave){
 * goes in this callback when a frame is received
 */
 ModbusError registerCallback(const ModbusSlave *slaveID,const ModbusRegisterCallbackArgs *args,ModbusRegisterCallbackResult *result){
-char str[1024];
+    char str[1024];
     sprintf(str,"Register query:\r\ntquery: %s\r\n type: %s\r\n  id: %d\r\nvalue: %c\r\n  fun: %d\r\n",
         modbusRegisterQueryStr(args->query),
         modbusDataTypeStr(args->type),
@@ -187,7 +167,6 @@ char str[1024];
 	);
     debug(str);
 
-    debug("inside callback\n\r");
     switch (args->query)
     {
         // R/W access check
@@ -241,7 +220,6 @@ void printErrorInfo(ModbusErrorInfo err)
   
     }else{
         debug("THERE IS A PROBLEM WITH THE INIT OF\r\n");
-		//printf("%s: it comes from the following element : %s",
 		debug(modbusErrorSourceStr(modbusGetErrorSource(err)));
 		debug(modbusErrorStr(modbusGetErrorCode(err)));
     }

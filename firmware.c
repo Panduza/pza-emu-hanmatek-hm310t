@@ -127,14 +127,12 @@ void initHanmtekValue(){
 void readGoalToReal(int index){
     switch (index)
     {
-        case 0x0030: //voltage goal 
+        case 0x0030: //voltage goal
+            if (registers[index]) 
             registers[0x0010] = registers[index];
             break;
         case 0x0031: //amps goal
             registers[0x0011] = registers[index];
-            break;
-        case 0x0001: //enable
-            registers[0x0001] = (uint16_t)registers[index];
             break;
     }
 }

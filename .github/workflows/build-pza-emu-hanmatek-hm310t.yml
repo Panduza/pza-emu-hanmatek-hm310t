@@ -1,0 +1,24 @@
+name: Build pza-emu-hanmatek-hm310t
+
+on:
+  push:
+    branches: [ "*" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Cmake
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 3.25.0
+        ninjaVersion: 1.11.1
+
+    - name: Create build dir
+      working-directory: .
+      run: >
+        mkdir -p build

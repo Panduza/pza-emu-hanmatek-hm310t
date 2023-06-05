@@ -15,7 +15,7 @@ jobs:
     - name: Install Cmake
       uses: lukka/get-cmake@latest
       with:
-        cmakeVersion: 3.25.0
+        cmakeVersion: 3.22.1
         ninjaVersion: 1.11.1
 
     - name: Create build dir

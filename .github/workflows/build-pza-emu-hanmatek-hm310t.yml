@@ -22,3 +22,23 @@ jobs:
       working-directory: .
       run: >
         mkdir -p build
+
+    - name: Build configuration
+      working-directory: build
+      run: >
+        cmake
+        ..
+
+    - name: Make!
+      working-directory: build
+      run: >
+        make
+        
+
+    - run: ls -la build
+
+    - name: Store artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: pza-emu-hanmatek-hm310t
+        path: /build/firmware.uf2

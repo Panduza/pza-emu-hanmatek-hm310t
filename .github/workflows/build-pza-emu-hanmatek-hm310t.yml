@@ -39,4 +39,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: pza-emu-hanmatek-hm310t
-        path: /build/firmware.uf2
+        path: build/firmware.uf2

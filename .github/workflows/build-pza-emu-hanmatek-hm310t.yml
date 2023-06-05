@@ -1,8 +1,6 @@
 name: Build pza-emu-hanmatek-hm310t
 
-on:
-  push:
-    branches: [ "*" ]
+on: [push]
 
 jobs:
   build:

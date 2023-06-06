@@ -20,7 +20,6 @@ jobs:
       uses: fiam/arm-none-eabi-gcc@v1
       with:
         release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
-    - run: ...
 
     - name: Create build dir
       working-directory: .

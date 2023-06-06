@@ -1,5 +1,5 @@
 # cmake_minimum_required(VERSION 3.16)
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 
 #Import pico-sdk librairie
 set(FETCHCONTENT_QUIET FALSE)

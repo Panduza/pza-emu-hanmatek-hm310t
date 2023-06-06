@@ -1,4 +1,4 @@
-name: Build pza-emu-hanmatek-hm310t
+name: Build build-pza-emu-hanmatek-hm310t
 
 on: [push]
 

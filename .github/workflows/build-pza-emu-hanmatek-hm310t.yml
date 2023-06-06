@@ -1,4 +1,4 @@
-name: Build build-pza-emu-hanmatek-hm310t
+name: Build pza-emu-hanmatek-hm310t
 
 on: [push]
 
@@ -16,7 +16,12 @@ jobs:
         cmakeVersion: 3.22.1
         ninjaVersion: 1.11.1
 
-        
+    - name: arm-none-eabi-gcc
+      uses: fiam/arm-none-eabi-gcc@v1
+      with:
+        release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
+    - run: ...
+
     - name: Create build dir
       working-directory: .
       run: >

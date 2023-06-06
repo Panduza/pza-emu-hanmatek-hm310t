@@ -17,6 +17,7 @@ project(firmware C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 # to use the sdk

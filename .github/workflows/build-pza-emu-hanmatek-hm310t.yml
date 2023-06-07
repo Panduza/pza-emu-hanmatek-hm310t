@@ -16,10 +16,9 @@ jobs:
         cmakeVersion: 3.22.1
         ninjaVersion: 1.11.1
 
-    - name: arm-none-eabi-gcc
-      uses: fiam/arm-none-eabi-gcc@v1.0.4
-      with:
-        release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
+    - name: Install arm-none-eabi-gcc
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      
 
     - name: Create build dir
       working-directory: .

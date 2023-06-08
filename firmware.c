@@ -131,10 +131,9 @@ void readGoalToReal(int index){
             if (registers[index]) 
             registers[0x0010] = registers[index];
             break;
-        case 0x0031: //amps goal
-            registers[0x0011] = registers[index];
-            break;
     }
+    //set amps real
+    //registers[0x0011]=registers[0x0010]/resistance
 }
 
 void blink(){

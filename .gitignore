@@ -55,3 +55,8 @@ dkms.conf
 
 # Building repository
 build
+
+# Tests Logs
+tests/robot/log.html
+tests/robot/output.xml
+tests/robot/report.html

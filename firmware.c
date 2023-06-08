@@ -119,9 +119,22 @@ void init(const uint led_used){
 
 void initHanmtekValue(){
     //Holdings
-    registers[0x0001] = 1;   //state
-    registers[0x0010] = 200; //volt real
-    registers[0x0011] = 20;  //amps real
+    registers[0x0001] = 0;   // state
+    registers[0x0003] = 3010; // model
+    registers[0x0004] = 0x4b58; // model
+    registers[0x0010] = 200; // volt real
+    registers[0x0011] = 0;  // amps real
+    registers[0x0012] = 0;  // Power H
+    registers[0x0013] = 0;  // Power L
+
+    registers[0x0020] = 0;  // OVP
+    registers[0x0021] = 0;  // OCP
+    registers[0x0022] = 0;  // OPP
+
+    registers[0x0030] = 0;  // Volt goal
+    registers[0x0031] = 0;  // Amps goal
+
+    registers[0x9999] = 1; // PS_Device address
 }
 
 void readGoalToReal(int index){
@@ -134,6 +147,34 @@ void readGoalToReal(int index){
     }
     //set amps real
     //registers[0x0011]=registers[0x0010]/resistance
+}
+
+void setPowerRegisters(){
+    uint32_t state = registers[0x0001];
+    uint32_t voltage = registers[0x0010]; // volt real
+    uint32_t current = registers[0x0011];  // amps real
+    uint32_t power = state * voltage * current;
+    
+    registers[0x0012] = power >> 16;  // Power H
+    registers[0x0013] = power & 0xFFFF;  // Power L
+}
+
+void setAmpsReal(){
+    uint32_t state = registers[0x0001];
+    uint32_t voltage = registers[0x0010]; // volt real
+    uint32_t current = 0;  // amps real
+    uint32_t currentMax = registers[0x0031];;  // amps goal max
+    uint32_t power = state * voltage * current;
+
+    uint8_t loadResistance = 0;
+    if (loadResistance!=0) {
+        current = state * voltage / loadResistance;
+        if (current > currentMax){
+            current = currentMax;
+        }
+    }
+    registers[0x0011] = current;
+    setPowerRegisters();
 }
 
 void blink(){

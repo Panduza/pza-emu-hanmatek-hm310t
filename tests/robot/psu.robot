@@ -55,4 +55,6 @@ Current capping
     Write voltage goal    3000
     Write amps goal    30
     Amps real should be    30
+    Turn off power supply
+    Amps real should be    0
     

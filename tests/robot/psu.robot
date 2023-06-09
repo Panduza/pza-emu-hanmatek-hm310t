@@ -2,11 +2,17 @@
 Library           ../rsc/Client.py
 
 *** Test Cases ***
+Read PSU info
+    Psu model should be    3010
+    Psu class should be    19288
+
 Read voltage
     Read voltage goal
+    Read voltage real
 
 Read Amps
     Read amps goal
+    Read amps real
 
 Write voltage
     Write voltage goal    20
@@ -27,3 +33,11 @@ Turn ON OFF power supply
     Power Supply Should Be    on
     Turn off power supply
     Power Supply Should Be    off
+
+Read Power consumption
+    Read power consumption
+
+Write on read only register
+    Write voltage goal    20
+    Write voltage real    40
+    Voltage real should be    20

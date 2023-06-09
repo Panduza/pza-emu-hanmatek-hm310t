@@ -19,31 +19,70 @@ class Client:
 
     # --- GETS ---
 
+    def read_psu_model(self):
+        content = self.master.read_holding_registers(address=0x03, count=1, slave=0x01)
+        content = content.registers[0]
+        print("PSU model = " + str(content))
+        return content
+    
+    def read_psu_class(self):
+        content = self.master.read_holding_registers(address=0x04, count=1, slave=0x01)
+        content = content.registers[0]
+        print("PSU class = " + str(content))
+        return content
+
     def read_voltage_goal(self):
         voltageGoal = self.master.read_holding_registers(address=0x30, count=1, slave=0x01)
-        return voltageGoal.registers[0]
+        voltageGoal = voltageGoal.registers[0]
+        print("Voltage goal = " + str(voltageGoal))
+        return voltageGoal
     
     def read_voltage_real(self):
         voltageReal = self.master.read_holding_registers(address=0x10, count=1, slave=0x01)
-        return voltageReal.registers[0]
+        voltageReal = voltageReal.registers[0]
+        print("Voltage real = " + str(voltageReal))
+        return voltageReal
         
     def read_amps_goal(self):
         ampsGoal = self.master.read_holding_registers(address=0x31, count=1, slave=0x01)
-        return ampsGoal.registers[0]
+        ampsGoal = ampsGoal.registers[0]
+        print("Amps goal = " + str(ampsGoal))
+        return ampsGoal
         
     def read_amps_real(self):
         ampsReal = self.master.read_holding_registers(address=0x11, count=1, slave=0x01)
-        return ampsReal.registers[0]
+        ampsReal = ampsReal.registers[0]
+        print("Amps real = " + str(ampsReal))
+        return ampsReal
         
     def read_enable(self):
         enable = self.master.read_holding_registers(address=0x01, count=1, slave=0x01)
-        return enable.registers[0]
+        enable = enable.registers[0]
+        print("Enable status = " + str(enable))
+        return enable
+    
+    def read_power_consumption(self):
+        powerH = self.master.read_holding_registers(address=0x12, count=1, slave=0x01)
+        powerL = self.master.read_holding_registers(address=0x13, count=1, slave=0x01)
+        powerH = powerH.registers[0]
+        powerL = powerL.registers[0]
+        power = (powerH << 16) + powerL
+        print("Power consumption = " + str(power))
+        return power
         
 
     # --- SET ---
 
+    def write_psu_model(self, value):
+        sending = self.master.write_registers(0x03, int(value), 0x01)
+
     def write_voltage_goal(self, voltage):
         sending = self.master.write_registers(0x30, int(voltage), 0x01)
+
+    def write_voltage_real(self, voltage):
+        """ Illegal action
+        """
+        sending = self.master.write_registers(0x10, int(voltage), 0x01)
 
     def write_amps_goal(self, amps):
         sending = self.master.write_registers(0x31, int(amps), 0x01)
@@ -59,6 +98,16 @@ class Client:
 
 
     # --- CHECK ---
+
+    def psu_model_should_be(self, expected):
+        modelReal = self.read_psu_model()
+        if modelReal != int(expected):
+            raise AssertionError('%s != %s' % (modelReal, int(expected)))
+
+    def psu_class_should_be(self, expected):
+        classReal = self.read_psu_class()
+        if classReal != int(expected):
+            raise AssertionError('%s != %s' % (classReal, int(expected)))
 
     def voltage_real_should_be(self, voltageExpected):
         voltageReal = self.read_voltage_real()
@@ -98,5 +147,6 @@ if __name__ == '__main__':
     print(type(voltageReal))
 
     print(interface.read_amps_real())
+    print(interface.read_amps_goal())
 
     

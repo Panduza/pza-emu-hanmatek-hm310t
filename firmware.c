@@ -184,7 +184,6 @@ void setAmpsReal(){
     uint32_t voltage = registers[0x0010]; // volt real
     uint32_t current = 0;  // amps real
     uint32_t currentMax = registers[0x0031];  // amps goal max
-    //uint32_t power = state * voltage * current;
 
     current = (state * voltage*10) / RESISTOR_LOAD;
     if (current > currentMax){

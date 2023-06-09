@@ -47,6 +47,7 @@ void determinFunctionCodeError (char *responseLib);
 void initHanmtekValue();
 void readGoalToReal(int index);
 void blink();
+void setVoltageReal();
 void setAmpsReal();
 void setPowerRegisters();
 
@@ -144,14 +145,28 @@ void initHanmtekValue(){
 void readGoalToReal(int index){
     switch (index)
     {
+        case 0x0001: //enable
+            setAmpsReal();
+            setPowerRegisters();
+            break;
         case 0x0030: //voltage goal
-            if (registers[index]) 
-            registers[0x0010] = registers[index];
+            setVoltageReal();
+            setAmpsReal();
+            setPowerRegisters();
+            break;
+        case 0x0031: //Amps goal
+            setAmpsReal();
+            setPowerRegisters();
             break;
     }
-    //set amps real
-    setAmpsReal();
-    setPowerRegisters();
+}
+void setVoltageReal(){
+    //if voltage asked is upper 30V, then set 30V
+    if(registers[0x0030] <= 3000){
+        registers[0x0010] = registers[0x0030];
+    }else{
+        registers[0x0010] = 3000;
+    }
 }
 
 void setPowerRegisters(){
@@ -177,8 +192,6 @@ void setAmpsReal(){
     }
 
     registers[0x0011] = current;
-    // registers[0x0011] = RESISTOR_LOAD;
-    
 }
 
 void blink(){

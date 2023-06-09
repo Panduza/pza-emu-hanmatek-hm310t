@@ -60,3 +60,4 @@ build
 tests/robot/log.html
 tests/robot/output.xml
 tests/robot/report.html
+tests/rsc/__pycache__/Client.cpython-310.pyc

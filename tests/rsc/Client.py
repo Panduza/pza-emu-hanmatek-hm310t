@@ -67,6 +67,8 @@ class Client:
         powerH = powerH.registers[0]
         powerL = powerL.registers[0]
         power = (powerH << 16) + powerL
+        print("Power consumption L = " + str(powerL))
+        print("Power consumption H = " + str(powerH))
         print("Power consumption = " + str(power))
         return power
         

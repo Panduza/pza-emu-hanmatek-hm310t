@@ -29,6 +29,7 @@
 #define BAUDRATE 115200
 #define UART_TX_PIN 4
 #define UART_RX_PIN 5
+#define RESISTOR_LOAD 100
 
 // DEBUG
 #define debug(...) uart_puts(UART_ID, __VA_ARGS__);
@@ -46,6 +47,8 @@ void determinFunctionCodeError (char *responseLib);
 void initHanmtekValue();
 void readGoalToReal(int index);
 void blink();
+void setAmpsReal();
+void setPowerRegisters();
 
 // callback prototypes
 ModbusError registerCallback(const ModbusSlave *slaveID,const ModbusRegisterCallbackArgs *args,ModbusRegisterCallbackResult *result);
@@ -120,8 +123,9 @@ void init(const uint led_used){
 void initHanmtekValue(){
     //Holdings
     registers[0x0001] = 0;   // state
+
     registers[0x0003] = 3010; // model
-    registers[0x0004] = 0x4b58; // model
+    registers[0x0004] = 0x4b58; // ClassDetial
     registers[0x0010] = 200; // volt real
     registers[0x0011] = 0;  // amps real
     registers[0x0012] = 0;  // Power H
@@ -146,7 +150,8 @@ void readGoalToReal(int index){
             break;
     }
     //set amps real
-    //registers[0x0011]=registers[0x0010]/resistance
+    setAmpsReal();
+    setPowerRegisters();
 }
 
 void setPowerRegisters(){
@@ -163,18 +168,17 @@ void setAmpsReal(){
     uint32_t state = registers[0x0001];
     uint32_t voltage = registers[0x0010]; // volt real
     uint32_t current = 0;  // amps real
-    uint32_t currentMax = registers[0x0031];;  // amps goal max
-    uint32_t power = state * voltage * current;
+    uint32_t currentMax = registers[0x0031];  // amps goal max
+    //uint32_t power = state * voltage * current;
 
-    uint8_t loadResistance = 0;
-    if (loadResistance!=0) {
-        current = state * voltage / loadResistance;
-        if (current > currentMax){
-            current = currentMax;
-        }
+    current = (state * voltage*10) / RESISTOR_LOAD;
+    if (current > currentMax){
+        current = currentMax;
     }
+
     registers[0x0011] = current;
-    setPowerRegisters();
+    // registers[0x0011] = RESISTOR_LOAD;
+    
 }
 
 void blink(){

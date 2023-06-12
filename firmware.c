@@ -29,7 +29,6 @@
 #define BAUDRATE 115200
 #define UART_TX_PIN 4
 #define UART_RX_PIN 5
-#define RESISTOR_LOAD 100
 
 // DEBUG
 #define debug(...) uart_puts(UART_ID, __VA_ARGS__);
@@ -140,6 +139,8 @@ void initHanmtekValue(){
     registers[0x0031] = 0;  // Amps goal
 
     registers[0x9999] = 1; // PS_Device address
+
+    registers[0x0024] = 100; //Resistor load
 }
 
 void readGoalToReal(int index){
@@ -158,8 +159,13 @@ void readGoalToReal(int index){
             setAmpsReal();
             setPowerRegisters();
             break;
+        case 0x0024: //Resistor load
+            setAmpsReal();
+            setPowerRegisters();
+            break;
     }
 }
+
 void setVoltageReal(){
     //if voltage asked is upper 30V, then set 30V
     if(registers[0x0030] <= 3000){
@@ -173,7 +179,7 @@ void setPowerRegisters(){
     uint32_t state = registers[0x0001];
     uint32_t voltage = registers[0x0010]; // volt real
     uint32_t current = registers[0x0011];  // amps real
-    uint32_t power = state * voltage * current;
+    uint32_t power = state * (voltage * current) / 100;
     
     registers[0x0012] = power >> 16;  // Power H
     registers[0x0013] = power & 0xFFFF;  // Power L
@@ -184,8 +190,9 @@ void setAmpsReal(){
     uint32_t voltage = registers[0x0010]; // volt real
     uint32_t current = 0;  // amps real
     uint32_t currentMax = registers[0x0031];  // amps goal max
+    uint32_t resistorLoad = registers[0x0024];
 
-    current = (state * voltage*10) / RESISTOR_LOAD;
+    current = (state * voltage*10) / resistorLoad;
     if (current > currentMax){
         current = currentMax;
     }

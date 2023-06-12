@@ -10,12 +10,6 @@ class Client:
         self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyACM0', stopbits=1, bytesize=8, parity='N', baudrate=115200)
         connexion = self.master.connect()
         print(self.master)
-        print("\033[92m-------------------client connected----------------------\033[0m")
-
-    def mon_keyword_perso(self, texte):
-        print("voici comment imprimer dans le log.html")
-        return "le texte etait: %s" % (texte)
-
 
     # --- GETS ---
 
@@ -81,6 +75,8 @@ class Client:
     # --- SET ---
 
     def write_psu_model(self, value):
+        """ Illegal action
+        """
         sending = self.master.write_registers(0x03, int(value), 0x01)
 
     def write_voltage_goal(self, voltage):

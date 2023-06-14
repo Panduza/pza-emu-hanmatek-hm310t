@@ -125,7 +125,7 @@ void initHanmtekValue(){
     registers[0x0001] = 0;   // state
 
     registers[0x0003] = 3010; // model
-    registers[0x0004] = 0x4b58; // ClassDetial
+    registers[0x0004] = 0x4b50; // ClassDetail 19280
     registers[0x0010] = 200; // volt real
     registers[0x0011] = 0;  // amps real
     registers[0x0012] = 0;  // Power H
@@ -147,6 +147,7 @@ void readGoalToReal(int index){
     switch (index)
     {
         case 0x0001: //enable
+            setVoltageReal();
             setAmpsReal();
             setPowerRegisters();
             break;
@@ -167,6 +168,11 @@ void readGoalToReal(int index){
 }
 
 void setVoltageReal(){
+    uint32_t state = registers[0x0001];
+    if(state == 0){
+        registers[0x0010] = 0;
+        return;
+    }
     //if voltage asked is upper 30V, then set 30V
     if(registers[0x0030] <= 3000){
         registers[0x0010] = registers[0x0030];

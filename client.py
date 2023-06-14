@@ -6,7 +6,9 @@ BROKER_ADDR="localhost"
 BROKER_PORT=1883
 
 # Do not forget to remplace the IP and PORT by the one you target
-pzaTOPIC_OUT=f"pza/rename_this_machine/hanmatek.hm310t/test_alim_quentin/atts"
+#pzaTOPIC_OUT=f"pza/rename_this_machine/hanmatek.hm310t/test_alim_quentin/atts"
+#pzaTOPIC_OUT=f"pza/rename_this_machine/psu_1.hm310t/test_alim_pico_quentin/atts" #Pico
+#pzaTOPIC_OUT=f"pza/rename_this_machine/hanmatek.hm310t/test_alim_real_quentin/atts" #Real PSU ?
 c = Client(url=BROKER_ADDR, port=BROKER_PORT)
 
 # Then connect and scan
@@ -15,6 +17,7 @@ c.connect()
 # list all the topics to find the PSU
 print("scanning the interfaces..")
 inter = c.scan_interfaces()
+print("select PSU")
 for topic in inter:
     print(f"- {topic} => {inter[topic]['type']}")
     if inter[topic]['type'] == "psu" :

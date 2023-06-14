@@ -8,8 +8,10 @@ class Client:
 
     def __init__(self):
         self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyACM0', stopbits=1, bytesize=8, parity='N', baudrate=115200)
+        #self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyUSB0', stopbits=1, bytesize=8, parity='N', baudrate=9600)
         connexion = self.master.connect()
         print(self.master)
+        self.writeDelay = 5
 
     # --- GETS ---
 
@@ -78,20 +80,25 @@ class Client:
         """ Illegal action
         """
         sending = self.master.write_registers(0x03, int(value), 0x01)
+        time.sleep(self.writeDelay)
 
     def write_voltage_goal(self, voltage):
         sending = self.master.write_registers(0x30, int(voltage), 0x01)
+        time.sleep(self.writeDelay)
 
     def write_voltage_real(self, voltage):
         """ Illegal action
         """
         sending = self.master.write_registers(0x10, int(voltage), 0x01)
+        time.sleep(self.writeDelay)
 
     def write_amps_goal(self, amps):
         sending = self.master.write_registers(0x31, int(amps), 0x01)
+        time.sleep(self.writeDelay)
 
     def write_enable(self, state):
         sending = self.master.write_registers(0x1, int(state) , 0x01)
+        time.sleep(self.writeDelay)
 
     def turn_on_power_supply(self):
         self.write_enable(1)
@@ -101,6 +108,7 @@ class Client:
 
     def write_resistor_load(self, value):
         sending = self.master.write_registers(0x24, int(value) , 0x01)
+        time.sleep(self.writeDelay)
 
 
     # --- CHECK ---
@@ -108,12 +116,12 @@ class Client:
     def psu_model_should_be(self, expected):
         modelReal = self.read_psu_model()
         if modelReal != int(expected):
-            raise AssertionError('%s != %s' % (modelReal, int(expected)))
+            raise AssertionError('The Model receive is %s, the exptected value is %s' % (modelReal, int(expected)))
 
     def psu_class_should_be(self, expected):
         classReal = self.read_psu_class()
         if classReal != int(expected):
-            raise AssertionError('%s != %s' % (classReal, int(expected)))
+            raise AssertionError('The class receive is %s, the expected value is %s.' % (classReal, int(expected)))
 
     def voltage_real_should_be(self, voltageExpected):
         voltageReal = self.read_voltage_real()

@@ -4,7 +4,7 @@ Library           ../rsc/Client.py
 *** Test Cases ***
 Read PSU info
     Psu model should be    3010
-    Psu class should be    19288
+    Psu class should be    19280
 
 Init
     Write voltage goal    500
@@ -13,7 +13,7 @@ Init
     Write resistor load    100
 
     Voltage goal should be    500
-    Voltage real should be    500
+    Voltage real should be    0
     Amps goal should be    300
     Amps real should be    0
     Resistor load should be    100
@@ -43,7 +43,10 @@ Test voltage
     Power consumption should be    1000    
 
 Test Amps max
+    Turn off power supply
     Write amps goal    50
+    Turn on power supply
+
 
     Voltage goal should be    1000
     Voltage real should be    1000
@@ -53,7 +56,9 @@ Test Amps max
     Power supply should be    on
     Power consumption should be    500
 
+    Turn off power supply
     Write amps goal    300
+    Turn on power supply
 
     Voltage goal should be    1000
     Voltage real should be    1000
@@ -64,6 +69,7 @@ Test Amps max
     Power consumption should be    1000
 
 Test Resistor load
+    Write amps goal    300
     Write resistor load    200
     
     Voltage goal should be    1000
@@ -73,3 +79,9 @@ Test Resistor load
     Resistor load should be    200
     Power supply should be    on
     Power consumption should be    500
+
+Shutdown
+    Turn off power supply
+    Power supply should be    off
+
+    

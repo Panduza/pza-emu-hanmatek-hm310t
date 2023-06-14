@@ -26,7 +26,7 @@
 
 // CONSTANTS
 #define UART_ID uart1
-#define BAUDRATE 115200
+#define BAUDRATE 9600
 #define UART_TX_PIN 4
 #define UART_RX_PIN 5
 

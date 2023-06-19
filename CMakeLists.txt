@@ -47,5 +47,5 @@ pico_add_extra_outputs(firmware)
 
 add_definitions(-DUSBD_VID=0x01A86) # ID_VENDOR_ID
 add_definitions(-DUSBD_PID=0x07523) # ID_MODEL_ID 7523
-add_definitions(-DUSBD_MANUFACTURER="1A86") # ID_VENDOR
-add_definitions(-DUSBD_PRODUCT="7523") # ID_MODEL
+add_definitions(-DUSBD_MANUFACTURER="1a86") # ID_VENDOR
+add_definitions(-DUSBD_PRODUCT="USB Serial") # ID_MODEL

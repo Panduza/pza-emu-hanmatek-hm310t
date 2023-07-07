@@ -70,17 +70,13 @@ amps_real=my_psu.amps.real.get()
 print("amps real is " + str(amps_real))
 time.sleep(2)
 
-var="n"
-print("Do you want to set enable->value (unsafe) ? (y/n)")
-var=input()
-if(var != "y" ):
-    print("Skip setting enable->value")
-    exit()
+
 # ***   POWER ON/OFF   ***
+
 #Write
 state=True
 print("\nset state to " + str(state))
-my_psu.enable.value.set(True)
+my_psu.enable.value.set(state)
 time.sleep(2)
 #Read
 print("Get state...")
@@ -91,7 +87,7 @@ time.sleep(2)
 #Write
 state=False
 print("\nset state to " + str(state))
-my_psu.enable.value.set(False)
+my_psu.enable.value.set(state)
 time.sleep(2)
 #Read
 print("Get state...")

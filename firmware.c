@@ -67,6 +67,7 @@ int main() {
     ModbusErrorInfo error;
 
     stdio_init_all();
+    stdio_set_translate_crlf(&stdio_usb, false);
     uart_init(UART_ID, BAUDRATE);
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -76,7 +77,7 @@ int main() {
     initHanmtekValue();
     blink();
 
-    debug("begining of program..\r\n");
+    debug("\n\rbeginning of program..\r\n");
 
 
     error = modbusSlaveInit(&slave, registerCallback, exceptionCallback, modbusDefaultAllocator, modbusSlaveDefaultFunctions, modbusSlaveDefaultFunctionCount);
@@ -283,7 +284,7 @@ ModbusError exceptionCallback(const ModbusSlave *slave,  uint8_t function, Modbu
 void printErrorInfo(ModbusErrorInfo err)
 {
 	if (modbusIsOk(err)){
-		debug("FRAME IS SEND TO THE LIB \r\n");
+		//debug("FRAME IS SEND TO THE LIB \r\n");
   
     }else{
         debug("THERE IS A PROBLEM WITH THE INIT OF\r\n");

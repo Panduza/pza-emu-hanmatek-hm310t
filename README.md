@@ -15,11 +15,6 @@ To have a solution independent from OS and their implementation specificities
 ![Firmware logic](flowchart.png)
 
 
-# Limitation
-
-When using the Panduza plateform, the State send by the Client (client.py) must be True. Otherwise (False or something else) the controle of the Pico crashes.
-
-
 # Build and run project
 
 This project has a github actions workflow that build the Pico firmware. The firmware can be download and copy on the Pico in bootsel mode.

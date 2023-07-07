@@ -4,14 +4,24 @@ from pymodbus.transaction import ModbusRtuFramer
 import time
 import logging
 
+import sys
+
+#DEBUG VERBOSE
+FORMAT = ('%(message)-15s')
+logging.basicConfig(format=FORMAT)
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+#END param DEBUG VERBOSE
+
 class Client:
 
     def __init__(self):
-        self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyACM0', stopbits=1, bytesize=8, parity='N', baudrate=115200)
+        self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyACM0', stopbits=1, bytesize=8, parity='N', baudrate=9600)
+        # self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyUSB1', stopbits=1, bytesize=8, parity='N', baudrate=9600)
         #self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyUSB0', stopbits=1, bytesize=8, parity='N', baudrate=9600)
         connexion = self.master.connect()
         print(self.master)
-        self.writeDelay = 5
+        self.writeDelay = 1
 
     # --- GETS ---
 
@@ -79,25 +89,30 @@ class Client:
     def write_psu_model(self, value):
         """ Illegal action
         """
-        sending = self.master.write_registers(0x03, int(value), 0x01)
+        sending = self.master.write_register(0x03, int(value), 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
     def write_voltage_goal(self, voltage):
-        sending = self.master.write_registers(0x30, int(voltage), 0x01)
+        sending = self.master.write_register(0x30, int(voltage), 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
     def write_voltage_real(self, voltage):
         """ Illegal action
         """
-        sending = self.master.write_registers(0x10, int(voltage), 0x01)
+        sending = self.master.write_register(0x10, int(voltage), 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
     def write_amps_goal(self, amps):
-        sending = self.master.write_registers(0x31, int(amps), 0x01)
+        sending = self.master.write_register(0x31, int(amps), 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
     def write_enable(self, state):
-        sending = self.master.write_registers(0x1, int(state) , 0x01)
+        sending = self.master.write_register(0x1, int(state) , 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
     def turn_on_power_supply(self):
@@ -107,7 +122,8 @@ class Client:
         self.write_enable(0)
 
     def write_resistor_load(self, value):
-        sending = self.master.write_registers(0x24, int(value) , 0x01)
+        sending = self.master.write_register(0x24, int(value) , 0x01)
+        print(sending)
         time.sleep(self.writeDelay)
 
 

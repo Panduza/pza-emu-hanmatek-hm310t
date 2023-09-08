@@ -12,7 +12,7 @@ To have a solution independent from OS and their implementation specificities
 
 # Firmware logic
 
-![Firmware logic](flowchart.png)
+![Firmware logic](images/flowchart.png)
 
 
 # Build and run project

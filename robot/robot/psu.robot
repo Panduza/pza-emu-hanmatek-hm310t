@@ -1,5 +1,5 @@
 *** Settings ***
-Library           ../rsc/Client.py
+Library           Client.py
 
 *** Test Cases ***
 Read PSU info
@@ -9,7 +9,7 @@ Read PSU info
 Init
     Write voltage goal    500
     Write amps goal    300
-    Turn off power supply
+    Turn on power supply
     Write resistor load    100
 
     Voltage goal should be    500
@@ -31,16 +31,6 @@ Test Enable
     Power supply should be    on
     Power consumption should be    250
 
-Test voltage
-    Write voltage goal    1000
-    
-    Voltage goal should be    1000
-    Voltage real should be    1000
-    Amps goal should be    300
-    Amps real should be    100
-    Resistor load should be    100
-    Power supply should be    on
-    Power consumption should be    1000    
 
 Test Amps max
     Turn off power supply

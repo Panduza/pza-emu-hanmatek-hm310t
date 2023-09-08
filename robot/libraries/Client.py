@@ -1,10 +1,18 @@
 # -*- Coding: utf-8 -*-
-from pymodbus.client import ModbusSerialClient
-from pymodbus.transaction import ModbusRtuFramer
+import sys
 import time
 import logging
 
-import sys
+from pymodbus.client import ModbusSerialClient
+from pymodbus.transaction import ModbusRtuFramer
+
+# -----------------------------------------------
+# Name of the test port
+PORT_NAME = '/dev/ttyUSB0'
+
+# Delay between two write
+WRITE_DELAY = 0.0
+# -----------------------------------------------
 
 #DEBUG VERBOSE
 FORMAT = ('%(message)-15s')
@@ -16,12 +24,10 @@ log.setLevel(logging.DEBUG)
 class Client:
 
     def __init__(self):
-        self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyACM0', stopbits=1, bytesize=8, parity='N', baudrate=9600)
-        # self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyUSB1', stopbits=1, bytesize=8, parity='N', baudrate=9600)
-        #self.master = ModbusSerialClient(framer=ModbusRtuFramer, port = '/dev/ttyUSB0', stopbits=1, bytesize=8, parity='N', baudrate=9600)
+        self.master = ModbusSerialClient(framer=ModbusRtuFramer, port=PORT_NAME, stopbits=1, bytesize=8, parity='N', baudrate=9600)
         connexion = self.master.connect()
         print(self.master)
-        self.writeDelay = 1
+        self.writeDelay = WRITE_DELAY
 
     # --- GETS ---
 
